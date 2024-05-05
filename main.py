@@ -10,7 +10,9 @@ y = 592
 y2 = 690
 letters = [""]
 
-array = [[0] * 12] * 14
+w, h = 12, 14
+arr = []
+temp_Array = []
 
 '''
 need to create a way to add elements to the 2d array so I then search through it for different word
@@ -21,36 +23,31 @@ function to solve the word search ( big issue)
 create function to then spit out picture with lines on top to show where words are
 '''
 
+Matrix = [[0 for x in range(w)] for y in range(h)]
+
 
 def read_image(x, x2, y, y2, file_name):
-    custom_config = '--oem 3 --psm 10'
+    custom_config = '--psm 10 --oem 3'
 
     try:
         img1 = np.array(Image.open(file_name))
-        # print("Image opened successfully.")
-
-        # print(x)
-        # print(x2)
-
-        # Verify image shape
-        # print("Image shape:", img1.shape)
 
         # Specify region coordinates [y1:y2, x1:x2]
         andon = img1[y:y2, x:x2]
 
-        # Display the image region
-        # Image.from-array(andon).show()
-
-        letter_Seen = pytesseract.image_to_string(Image.fromarray(andon), config=custom_config)
-        array.add(letter_Seen)
+        letter_seen = pytesseract.image_to_string(Image.fromarray(andon), config=custom_config)
+        temp_Array.append(letter_seen)
+        #print(temp_Array)
+        return letter_seen
         # print("Letter Seen:", letter_Seen)
     except Exception as e:
         print("An error occurred:", e)
 
 
-for yaxis in range(14):
-    for xaxis in range(12):
-        read_image(x, x2, y, y2, filename)
+for i in range(h):
+    for j in range(w):
+        #print(j)
+        Matrix[i][j] = read_image(x, x2, y, y2, filename)
         x = x + 102
         x2 = x2 + 102
     x = 162
@@ -58,6 +55,13 @@ for yaxis in range(14):
     y = y + 95
     y2 = y2 + 95
 
-for row in array:
-    print(row)
+print("the end of the program print\n")
+print(Matrix)
 
+'''
+iterate through matrix until i find first letter
+then check surrounding letters for 2nd letter
+then since you know the direction of the letters then check all the letters until whole word is found
+if i did not find the word then go back a step until the loop is finished.
+if word is still not done then start iterating through the matrix until next would is found
+'''
